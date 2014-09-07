@@ -6,15 +6,12 @@ import (
   "net/http"
   "io/ioutil"
   "github.com/go-martini/martini"
-	"github.com/codegangsta/martini-contrib/render"
+  "github.com/codegangsta/martini-contrib/render"
 )
 
 func main() {
   m := martini.Classic()
   m.Use(render.Renderer())
-  m.Get("/", func(r render.Render) {
-    r.HTML(200, "node", "Drupal")
-  })
 
   // HTTP Client to connect to our Drupal site
   client := &http.Client{
@@ -28,7 +25,9 @@ func main() {
     if err != nil {
       fmt.Printf("%s", err)
     }
-    fmt.Printf("%s\n", string(contents))
+    m.Get("/", func(r render.Render) {
+      r.HTML(200, "node", string(contents))
+    })
   }
   m.Run()
 }
